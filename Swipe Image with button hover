@@ -1,0 +1,145 @@
+<!-- 
+/////////////////////////////////////////////////////////////////////////////
+/////////	AUTHOR: Palmani. K
+/////////	Date: Dec - 05 -2013
+/////////	Description: Swipe image left & right without any third pary js plugins 
+/////////////////////////////////////////////////////////////////////////////
+-->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Swipe</title>
+   <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css">
+<!--   <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">-->
+
+  <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+  <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+  <script src="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script>
+  <style>
+      .slideshow img {
+            display: none;
+            height: 35%;
+            width: 100%;
+            cursor: move;
+        }
+        .slideshow img:first-child {
+            display: block; /* overrides the previous style */
+        }
+      #icon{
+          position: absolute;
+            margin: -9px -9px 0 0;
+            z-index:  100;
+      }
+  #test{
+          height: 40%;
+          width: 40%;
+          border: 2px solid red;
+      }
+   .ui-controlgroup .ui-btn-icon-notext .ui-btn-inner{
+          height: 10px;
+      }
+  </style>
+</head>
+<body>
+     <div data-role="page" data-theme="a" data-dom-cache="false">
+        <div data-role="header">
+            Header
+        </div>
+        <div >
+            <div id="icon" data-type="horizontal"  data-role="controlgroup">
+                <a id="prev"  href="#" data-role="button" data-iconpos="notext" data-theme="d" data-icon="arrow-l"></a> 
+                <a id="next" href="#" data-role="button" data-iconpos="notext" data-theme="d" data-icon="arrow-r"></a>
+            </div>
+           <div id="test" class="slideshow" >
+               
+                <img  src="http://jquerymobile.com/demos/1.3.0-beta.1/docs/demos/_assets/img/buenosaires.jpg" alt="good" ></img>
+                <img  src="http://jquerymobile.com/demos/1.3.0-beta.1/docs/demos/_assets/img/capetown.jpg" alt="some" ></img>
+                <img  src="http://jquerymobile.com/demos/1.3.0-beta.1/docs/demos/_assets/img/newyork.jpg" alt="bad" ></img>
+            </div>
+        </div>
+         <div data-role="footer">
+            Footer
+        </div>
+    </div> 
+<script>
+    var first = $("img:first"), last = $("img:last");
+    var index = 0, noImg;
+    $("#prev").addClass("ui-disabled");
+    $(function () {
+        first.position();
+        $("#icon").css({ "left": first.position().left, "top": first.position().top + 200 });
+        ///////////////////////
+        // Swipe Left
+        ///////////////////////
+        $("#test img").on("swipeleft", swipeRightHandler);
+        function swipeRightHandler(event) {
+            //alert(event);
+            if ($(this)[0] != last[0]) {
+                $(event.target).hide().next().show("slide", { direction: 'right' }, "slow");
+                ++index;
+                console.log("swiperight pass;index: " + index);
+                $("#prev").removeClass("ui-disabled");
+            }
+            else {
+                $("#next").addClass("ui-disabled");
+                console.log("swiperight ui-disabled pass;index: " + index);
+            }
+        }
+        ///////////////////////
+        // Swipe Right
+        ///////////////////////
+        $("#test img").on("swiperight", swipeLeftHandler);
+        function swipeLeftHandler(event) {
+            //alert(event);
+            if ($(this)[0] != first[0]) {
+                $(event.target).hide().prev().show("slide", { direction: 'left' }, "slow");
+                --index;
+                 $("#next").removeClass("ui-disabled");
+            }
+            else{
+                 $("#prev").addClass("ui-disabled");
+            }
+        }
+        ///////////////////////
+        // Previous Button click
+        ///////////////////////
+        $("#prev").click(function () {
+            var temp = $("#test img").get(--index);
+            console.log("next: " + temp + "; index: " + index);
+            if (temp != undefined && index >= 0) {
+                console.log("pass");
+                $("#test img").hide();
+                console.log(temp);
+                $(temp).show("slide", { direction: 'left' }, "slow");
+                $("#next").removeClass("ui-disabled");
+            }
+            else {
+                ++index;
+                $("#prev").addClass("ui-disabled");
+            }
+        });
+        ///////////////////////
+        // Next Button click
+        ///////////////////////
+        $("#next").click(function () {
+            var temp = $("#test img").get(++index);
+            console.log("prev: " + temp + "; index: " + index);
+            if (temp != undefined) {
+                console.log("pass");
+                $("#test img").hide();
+                console.log(temp);
+                $(temp).show("slide", { direction: 'right' }, "slow");
+                $("#prev").removeClass("ui-disabled");
+            }
+            else {
+                --index;
+                $("#next").addClass("ui-disabled");
+                console.log("next ui-disabled pass");
+            }
+        });
+    });
+</script>
+</body>
+</html>
