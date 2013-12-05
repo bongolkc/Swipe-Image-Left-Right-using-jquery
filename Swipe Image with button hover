@@ -32,7 +32,8 @@
             margin: -9px -9px 0 0;
             z-index:  100;
       }
-  #test{
+  #test
+  {
           height: 40%;
           width: 40%;
           border: 2px solid red;
